@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "test": "jest"
   },
   "dependencies": {
     "uuid": "^3.1.0"
@@ -21,5 +22,8 @@
     "serverless"
   ],
   "author": "Adam Melnyk",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^20.0.4"
+  }
 }
