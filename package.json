@@ -1,0 +1,25 @@
+{
+  "name": "bingo",
+  "version": "0.1.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "uuid": "^3.1.0"
+  },
+  "engines": {
+    "node": "6.10.3"
+  },
+  "repository": {
+    "type": "git"
+  },
+  "keywords": [
+    "node",
+    "lambda",
+    "serverless"
+  ],
+  "author": "Adam Melnyk",
+  "license": "MIT"
+}
