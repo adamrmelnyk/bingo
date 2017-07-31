@@ -31,15 +31,18 @@ exports.standardBingoCard = () => {
   };
 };
 
-// TODO: Should return the letter as well
-exports.newBall = () => exports.shuffleArray(exports.range(1,75)).slice(0,1)[0];
+exports.newBall = () => {
+  const number = exports.shuffleArray(exports.range(1,75)).slice(0,1)[0];
+  return `${["b", "i", "n", "g", "o"][Math.ceil(number / 15) - 1]}${number}`
+};
 
 exports.logical = (event) => {
   // TODO: read event and execute the correct function
 };
 
-exports.handler = lambda((event, context, callback) => {
+exports.handler = (event, context, callback) => {
+  const obj = JSON.parse(event.body);
   logical(event)
     .then(data => callback(null, data))
     .catch(err => callback(err));
-});
+};

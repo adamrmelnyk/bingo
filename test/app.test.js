@@ -49,7 +49,6 @@ describe('standardBingoCard', () => {
 
 describe('newBall', () => {
   it('returns a random bingo number', () => {
-    expect()
-    expect(newBall()).toBeLessThanOrEqual(76);
+    expect(/(b|i|n|g|o)[1-75]/.test(newBall())).toBe(true)
   });
 });
