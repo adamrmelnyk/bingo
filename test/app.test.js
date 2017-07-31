@@ -51,4 +51,17 @@ describe('newBall', () => {
   it('returns a random bingo number', () => {
     expect(/(b|i|n|g|o)[1-75]/.test(newBall())).toBe(true)
   });
+
+  it('returns an empty array if everything is excluded', () => {
+    const bRange = range(1).map((e) => `b${e}`);
+    const iRange = range(16).map((e) => `i${e}`);
+    const nRange = range(31).map((e) => `n${e}`);
+    const gRange = range(46).map((e) => `g${e}`);
+    const oRange = range(61).map((e) => `o${e}`);
+    const fullRange = bRange.concat(iRange)
+      .concat(nRange)
+      .concat(gRange)
+      .concat(oRange)
+    expect(newBall(fullRange)).toEqual([]);
+  });
 });

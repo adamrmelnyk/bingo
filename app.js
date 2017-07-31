@@ -31,9 +31,15 @@ exports.standardBingoCard = () => {
   };
 };
 
-exports.newBall = () => {
-  const number = exports.shuffleArray(exports.range(1,75)).slice(0,1)[0];
-  return `${["b", "i", "n", "g", "o"][Math.ceil(number / 15) - 1]}${number}`
+exports.newBall = (exclude = []) => {
+  const possibleNumbers = exports.range(1,75).filter((e) => {
+    return !exclude.map((e) => e.slice(1)).map(Number).includes(e);
+  });
+  if (possibleNumbers.length !== 0) {
+    const number = exports.shuffleArray(possibleNumbers).slice(0,1)[0];
+    return `${["b", "i", "n", "g", "o"][Math.ceil(number / 15) - 1]}${number}`
+  }
+  return [];
 };
 
 exports.logical = (event) => {
