@@ -5,6 +5,7 @@ const standardBingoCard = require('../exports.js').standardBingoCard;
 const buildResponse = require('../exports.js').buildResponse;
 const newBall = require('../exports.js').newBall;
 const logical = require('../exports.js').logical;
+const handler = require('../exports.js').handler;
 
 describe('range', () => {
   it('defaults to a range of 15', () => {
@@ -125,5 +126,19 @@ describe('logical', () => {
     return logical(testEvent)
       .then((result) => expect(result.status).toBe(404))
       .catch(() => expect('Error, should not get here').not.toBeDefined());
+  });
+});
+
+describe('handler', () => {
+  it('returns data back from logical', () => {
+    function callback(err, data) {
+      const card = JSON.parse(data.body);
+      expect(card.n[2]).toBe('Free');
+      done();
+    };
+    const testEvent = {
+      path: '/bingocard'
+    };
+    handler(testEvent, {}, callback);
   });
 });

@@ -75,10 +75,16 @@ const logical = (event) => {
 };
 
 const handler = (event, context, callback) => {
-  const obj = JSON.parse(event.body);
   logical(event)
     .then(data => callback(null, data))
-    .catch(err => callback(err));
+    .catch(err => {
+      const response = {
+        statusCode: 500,
+        headers: {},
+        body: JSON.stringify({ message: err }),
+      };
+      callback(null, response)
+    });
 };
 
 module.exports = {
