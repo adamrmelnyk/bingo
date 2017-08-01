@@ -1,6 +1,4 @@
 'use strict';
-const uuidv4 = require('uuid/v4');
-
 const range = (start, end = 15) => Array.apply(0, Array(end)).map((e, i) => (i + start));
 
 const randomColumn = start => {
