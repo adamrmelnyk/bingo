@@ -2,6 +2,7 @@ const range = require('../app.js').range;
 const randomColumn = require('../app.js').randomColumn;
 const shuffleArray = require('../app.js').shuffleArray;
 const standardBingoCard = require('../app.js').standardBingoCard;
+const buildResponse = require('../app.js').buildResponse;
 const newBall = require('../app.js').newBall;
 
 describe('range', () => {
@@ -44,6 +45,26 @@ describe('standardBingoCard', () => {
 
   it('has a free space', () => {
     expect(card.n[2]).toBe('Free');
+  });
+});
+
+describe('buildResponse', () => {
+  it('builds a response with a default status', () => {
+    const expectedResponse = {
+      status: 200,
+      headers: {},
+      body: 'test response',
+    };
+    expect(buildResponse('test response')).toEqual(expectedResponse);
+  });
+
+  it('builds a response with a custom status', () => {
+    const expectedResponse = {
+      status: 418,
+      headers: {},
+      body: 'Im a teapot',
+    };
+    expect(buildResponse('Im a teapot', 418)).toEqual(expectedResponse);
   });
 });
 
