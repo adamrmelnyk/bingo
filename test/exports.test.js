@@ -1,9 +1,10 @@
-const range = require('../app.js').range;
-const randomColumn = require('../app.js').randomColumn;
-const shuffleArray = require('../app.js').shuffleArray;
-const standardBingoCard = require('../app.js').standardBingoCard;
-const buildResponse = require('../app.js').buildResponse;
-const newBall = require('../app.js').newBall;
+const range = require('../exports.js').range;
+const randomColumn = require('../exports.js').randomColumn;
+const shuffleArray = require('../exports.js').shuffleArray;
+const standardBingoCard = require('../exports.js').standardBingoCard;
+const buildResponse = require('../exports.js').buildResponse;
+const newBall = require('../exports.js').newBall;
+const logical = require('../exports.js').logical;
 
 describe('range', () => {
   it('defaults to a range of 15', () => {
@@ -84,5 +85,45 @@ describe('newBall', () => {
       .concat(gRange)
       .concat(oRange)
     expect(newBall(fullRange)).toEqual([]);
+  });
+});
+
+describe('logical', () => {
+  it('hits the root path', () => {
+    const testEvent = {
+      path: '/',
+    };
+    return logical(testEvent)
+      .then((result) => expect(result.body).toBe('root path'))
+      .catch(() => expect('Error, should not get here').not.toBeDefined());
+  });
+
+  it('hits the newball path', () => {
+    const testEvent = {
+      path: '/newball',
+    };
+    return logical(testEvent)
+    .then((result) => {
+      expect(/b|i|n|g|o[1-75]/.test(result.body)).toBe(true)
+    })
+    .catch(() => expect('Error, should not get here').not.toBeDefined());
+  });
+
+  it('hits the bingcard path', () => {
+    const testEvent = {
+      path: '/bingocard',
+    };
+    return logical(testEvent)
+      .then((result) => expect(result.body.n[2]).toBe('Free'))
+      .catch(() => expect('Error, should not get here').not.toBeDefined());
+  });
+
+  it('returns 404 for an undefined path', () => {
+    const testEvent = {
+      path: '/helpimtrappedinaslugfactory',
+    };
+    return logical(testEvent)
+      .then((result) => expect(result.status).toBe(404))
+      .catch(() => expect('Error, should not get here').not.toBeDefined());
   });
 });

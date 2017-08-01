@@ -47,10 +47,12 @@ const buildResponse = (body, status = 200) => ({
 });
 
 const logical = (event) => {
-  switch(JSON.parse(event.path)) {
+  let body = '';
+  let response = '';
+  switch(event.path) {
     case '/':
-      let body = 'TODO: Fill out body'
-      let response = buildResponse(body);
+      body = 'root path'
+      response = buildResponse(body);
       break;
     case '/newball':
     // TODO: Need to check in the event for body
