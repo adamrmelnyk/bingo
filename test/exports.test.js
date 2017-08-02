@@ -42,7 +42,7 @@ describe('standardBingoCard', () => {
   const card = standardBingoCard();
 
   it('returns a standard bingo card', () => {
-    expect(Object.keys(card)).toEqual(["b", "i", "n", "g", "o"])
+    expect(Object.keys(card)).toEqual(['b', 'i', 'n', 'g', 'o']);
   });
 
   it('has a free space', () => {
@@ -72,7 +72,7 @@ describe('buildResponse', () => {
 
 describe('newBall', () => {
   it('returns a random bingo number', () => {
-    expect(/(b|i|n|g|o)[1-75]/.test(newBall())).toBe(true)
+    expect(/b|i|n|g|o[1-75]/.test(newBall())).toBe(true);
   });
 
   it('returns an empty array if everything is excluded', () => {
@@ -84,8 +84,8 @@ describe('newBall', () => {
     const fullRange = bRange.concat(iRange)
       .concat(nRange)
       .concat(gRange)
-      .concat(oRange)
-    expect(newBall(fullRange)).toEqual("");
+      .concat(oRange);
+    expect(newBall(fullRange)).toEqual('');
   });
 });
 
@@ -113,7 +113,7 @@ describe('logical', () => {
 
   it('hits the newball path with correct exclusions in body', () => {
     const bRange = range(1).map((e) => `b${e}`);
-    const body = JSON.stringify(`{"exclusions": ${bRange}}`);
+    const body = JSON.stringify({exclusions: bRange});
     const testEvent = {
       path: '/newball',
       body: body,
@@ -177,7 +177,7 @@ describe('handler', () => {
     };
     const testEvent = {
       path: '/newball',
-      body: JSON.stringify({ exclusions: ["b1"]}),
+      body: JSON.stringify({ exclusions: ['b1']}),
     };
     handler(testEvent, {}, callback);
   });
