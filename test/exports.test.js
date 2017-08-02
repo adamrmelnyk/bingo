@@ -53,18 +53,18 @@ describe('standardBingoCard', () => {
 describe('buildResponse', () => {
   it('builds a response with a default status', () => {
     const expectedResponse = {
-      status: 200,
+      statusCode: 200,
       headers: {},
-      body: 'test response',
+      body: JSON.stringify('test response'),
     };
     expect(buildResponse('test response')).toEqual(expectedResponse);
   });
 
   it('builds a response with a custom status', () => {
     const expectedResponse = {
-      status: 418,
+      statusCode: 418,
       headers: {},
-      body: 'Im a teapot',
+      body: JSON.stringify('Im a teapot'),
     };
     expect(buildResponse('Im a teapot', 418)).toEqual(expectedResponse);
   });
@@ -85,7 +85,7 @@ describe('newBall', () => {
       .concat(nRange)
       .concat(gRange)
       .concat(oRange)
-    expect(newBall(fullRange)).toEqual([]);
+    expect(newBall(fullRange)).toEqual("");
   });
 });
 
@@ -95,19 +95,46 @@ describe('logical', () => {
       path: '/',
     };
     return logical(testEvent)
-      .then((result) => expect(result.body).toBe('root path'))
+      .then((result) => expect(JSON.parse(result.body)).toBe('root path'))
       .catch(() => expect('Error, should not get here').not.toBeDefined());
   });
 
   it('hits the newball path', () => {
     const testEvent = {
       path: '/newball',
+      body: null,
     };
     return logical(testEvent)
-    .then((result) => {
-      expect(/b|i|n|g|o[1-75]/.test(result.body)).toBe(true)
-    })
-    .catch(() => expect('Error, should not get here').not.toBeDefined());
+      .then((result) => {
+        expect(/b|i|n|g|o[1-75]/.test(JSON.parse(result.body))).toBe(true);
+      })
+      .catch(() => expect('Error, should not get here').not.toBeDefined());
+  });
+
+  it('hits the newball path with correct exclusions in body', () => {
+    const bRange = range(1).map((e) => `b${e}`);
+    const body = JSON.stringify(`{"exclusions": ${bRange}}`);
+    const testEvent = {
+      path: '/newball',
+      body: body,
+    };
+    return logical(testEvent)
+      .then((result) => {
+        expect(/i|n|g|o[1-75]/.test(JSON.parse(result.body))).toBe(true);
+      })
+      .catch(() => expect('Error, should not get here').not.toBeDefined());
+  });
+
+  it('hits the newball path with incorrect body', () => {
+    const testEvent = {
+      path: '/newball',
+      body: JSON.stringify({ notARealParam: 'not a real value'}),
+    };
+    return logical(testEvent)
+      .then((result) => {
+        expect(/b|i|n|g|o[1-75]/.test(JSON.parse(result.body))).toBe(true);
+      })
+      .catch(() => expect('Error, should not get here').not.toBeDefined());
   });
 
   it('hits the bingcard path', () => {
@@ -115,7 +142,7 @@ describe('logical', () => {
       path: '/bingocard',
     };
     return logical(testEvent)
-      .then((result) => expect(result.body.n[2]).toBe('Free'))
+      .then((result) => expect(JSON.parse(result.body).n[2]).toBe('Free'))
       .catch(() => expect('Error, should not get here').not.toBeDefined());
   });
 
@@ -124,13 +151,13 @@ describe('logical', () => {
       path: '/helpimtrappedinaslugfactory',
     };
     return logical(testEvent)
-      .then((result) => expect(result.status).toBe(404))
+      .then((result) => expect(result.statusCode).toBe(404))
       .catch(() => expect('Error, should not get here').not.toBeDefined());
   });
 });
 
 describe('handler', () => {
-  it('returns data back from logical', () => {
+  it('returns bingocard data back from logical', () => {
     function callback(err, data) {
       const card = JSON.parse(data.body);
       expect(card.n[2]).toBe('Free');
@@ -138,6 +165,19 @@ describe('handler', () => {
     };
     const testEvent = {
       path: '/bingocard'
+    };
+    handler(testEvent, {}, callback);
+  });
+
+  it('returns bingo number data back from logical', () => {
+    function callback(err, data) {
+      const number = JSON.parse(data.body);
+      expect(/b|i|n|g|o[1-75]/.test(number)).toBe(true);
+      done();
+    };
+    const testEvent = {
+      path: '/newball',
+      body: JSON.stringify({ exclusions: ["b1"]}),
     };
     handler(testEvent, {}, callback);
   });

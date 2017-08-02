@@ -37,13 +37,13 @@ const newBall = (exclude = []) => {
     const number = shuffleArray(possibleNumbers).slice(0,1)[0];
     return `${["b", "i", "n", "g", "o"][Math.ceil(number / 15) - 1]}${number}`
   }
-  return [];
+  return "";
 };
 
 const buildResponse = (body, status = 200) => ({
-  status: status,
+  statusCode: status,
   headers: {},
-  body: body,
+  body: JSON.stringify(body),
 });
 
 const logical = (event) => {
@@ -55,8 +55,8 @@ const logical = (event) => {
       response = buildResponse(body);
       break;
     case '/newball':
-    // TODO: Need to check in the event for body
-      body = newBall();
+      const requestBody = JSON.parse(event.body);
+      body = (requestBody && requestBody.exclusions) ? newBall(requestBody.exclusions) : newBall()
       response = buildResponse(body)
       break;
     case '/bingocard':
@@ -67,9 +67,11 @@ const logical = (event) => {
       body = 'Page not found';
       response = buildResponse(body, 404);
   }
-  return new Promise(resolve => {
+  return new Promise((resolve, reject) => {
     if (response) {
       resolve(response);
+    } else {
+      reject(new Error('Error in response'));
     }
   });
 };
