@@ -14,12 +14,12 @@ const shuffleArray = (array) => {
     clone[i] = clone[j];
     clone[j] = temp;
   };
-  return clone
+  return clone;
 };
 
 const standardBingoCard = () => {
   const nColumn = randomColumn(31);
-  nColumn[2] = "Free";
+  nColumn[2] = 'Free';
   return {
     b: randomColumn(1),
     i: randomColumn(16),
@@ -35,9 +35,9 @@ const newBall = (exclude = []) => {
   });
   if (possibleNumbers.length !== 0) {
     const number = shuffleArray(possibleNumbers).slice(0,1)[0];
-    return `${["b", "i", "n", "g", "o"][Math.ceil(number / 15) - 1]}${number}`
+    return `${['b', 'i', 'n', 'g', 'o'][Math.ceil(number / 15) - 1]}${number}`;
   }
-  return "";
+  return '';
 };
 
 const buildResponse = (body, status = 200) => ({
@@ -51,13 +51,18 @@ const logical = (event) => {
   let response = '';
   switch(event.path) {
     case '/':
-      body = 'root path'
+      body = JSON.stringify({
+        name: 'Bingo API',
+        version: '0.1.0',
+        endpoints: ['/newball', '/bingocard'],
+        github: 'https://github.com/adamrmelnyk/bingo'
+      });
       response = buildResponse(body);
       break;
     case '/newball':
       const requestBody = JSON.parse(event.body);
-      body = (requestBody && requestBody.exclusions) ? newBall(requestBody.exclusions) : newBall()
-      response = buildResponse(body)
+      body = (requestBody && requestBody.exclusions) ? newBall(requestBody.exclusions) : newBall();
+      response = buildResponse(body);
       break;
     case '/bingocard':
       body = standardBingoCard();
@@ -85,7 +90,7 @@ const handler = (event, context, callback) => {
         headers: {},
         body: JSON.stringify({ message: err }),
       };
-      callback(null, response)
+      callback(null, response);
     });
 };
 
