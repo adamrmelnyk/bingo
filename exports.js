@@ -51,12 +51,12 @@ const logical = (event) => {
   let response = '';
   switch(event.path) {
     case '/':
-      body = JSON.stringify({
+      body = {
         name: 'Bingo API',
         version: '0.1.0',
         endpoints: ['/newball', '/bingocard'],
         github: 'https://github.com/adamrmelnyk/bingo'
-      });
+      };
       response = buildResponse(body);
       break;
     case '/newball':

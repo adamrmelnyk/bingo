@@ -95,7 +95,7 @@ describe('logical', () => {
       path: '/',
     };
     return logical(testEvent)
-      .then((result) => expect(JSON.parse(result.body)).toBe('root path'))
+      .then((result) => expect(JSON.parse(result.body).name).toBe('Bingo API'))
       .catch(() => expect('Error, should not get here').not.toBeDefined());
   });
 
