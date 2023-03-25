@@ -11,7 +11,7 @@ Returns a randomly generated 5 x 5 bingo card
 #### Sample useage
 
 ```sh
-$ curl https://zrfwkyzgg1.execute-api.us-east-2.amazonaws.com/prod/bingocard
+$ curl https://your-lambda.execute-api.us-east-2.amazonaws.com/prod/bingocard
 
 {
   "b":[6,7,5,9,10],
